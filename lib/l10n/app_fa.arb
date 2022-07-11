@@ -1,0 +1,7 @@
+{
+    "helloWorld": "سلام دنیا",
+    "esm":"امید",
+    "@helloWorld": {
+      "description": "The conventional newborn programmer greeting"
+    }
+}

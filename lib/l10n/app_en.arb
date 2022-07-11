@@ -1,0 +1,7 @@
+{
+    "helloWorld": "Hello World",
+    "esm":"omid",
+    "@helloWorld": {
+      "description": "The conventional newborn programmer greeting"
+    }
+}
