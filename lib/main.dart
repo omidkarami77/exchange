@@ -1,4 +1,5 @@
 import 'package:exchange/providers/theme_provider.dart';
+import 'package:exchange/ui/main_wrapper.dart';
 import 'package:exchange/ui/ui_helper/ThemeSwitcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,7 +75,7 @@ class _BodyState extends State<Body> {
         title: Text('Karami Exchange'),
         centerTitle: true,
       ),
-      body: Center(child: Text(AppLocalizations.of(context)!.helloWorld)),
+      body: MainWrapper(),
     );
   }
 }
