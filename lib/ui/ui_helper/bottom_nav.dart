@@ -5,10 +5,11 @@ class BottomNav extends StatelessWidget {
   PageController controller;
   @override
   Widget build(BuildContext context) {
+    var primaryColor = Theme.of(context).primaryColor;
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
       notchMargin: 5,
-      color: Colors.amber,
+      color: primaryColor,
       child: SizedBox(
         height: 63,
         child: Row(
@@ -50,7 +51,7 @@ class BottomNav extends StatelessWidget {
                             duration: Duration(microseconds: 300),
                             curve: Curves.easeInOut);
                       },
-                      icon: Icon(Icons.verified_user),
+                      icon: Icon(Icons.person),
                     ),
                     IconButton(
                       onPressed: () {
@@ -58,7 +59,7 @@ class BottomNav extends StatelessWidget {
                             duration: Duration(microseconds: 300),
                             curve: Curves.easeInOut);
                       },
-                      icon: Icon(Icons.bar_chart),
+                      icon: Icon(Icons.bookmark),
                     ),
                   ]),
             ),

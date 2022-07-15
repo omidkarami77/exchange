@@ -1,5 +1,3 @@
-import 'package:exchange/models/crypto_model/status.dart';
-
 class ResponseModel<T> {
   Status? status;
   T? data;
@@ -11,7 +9,6 @@ class ResponseModel<T> {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "Status  : $status \n Message : $message \n Data : $data";
   }
 }

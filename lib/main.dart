@@ -1,81 +1,69 @@
-import 'package:exchange/providers/theme_provider.dart';
-import 'package:exchange/ui/main_wrapper.dart';
-import 'package:exchange/ui/ui_helper/ThemeSwitcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'providers/crypto_data_provider.dart';
+import 'providers/market_view_provider.dart';
+import 'providers/theme_provider.dart';
+import 'providers/user_data_provider.dart';
+import 'ui/main_wrapper.dart';
+import 'ui/sign_up_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ChangeNotifierProvider(create: (context) => CryptoDataProvider()),
+      ChangeNotifierProvider(create: (context) => MarketViewProvider()),
+      ChangeNotifierProvider(create: (context) => UserDataProvider()),
     ],
-    child: MyMaterialApp(),
+    child: const MyMaterialApp(),
   ));
 }
 
 class MyMaterialApp extends StatefulWidget {
-  MyMaterialApp({super.key});
+  const MyMaterialApp({Key? key}) : super(key: key);
 
   @override
-  State<MyMaterialApp> createState() => _MyMaterialAppState();
+  _MyMaterialAppState createState() => _MyMaterialAppState();
 }
 
 class _MyMaterialAppState extends State<MyMaterialApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: ((context, ThemeProvider, child) {
-        return MaterialApp(
-          locale: Locale('fa', ''),
-          title: 'Localizations Sample App',
-          localizationsDelegates: const [
-            AppLocalizations.delegate, // Add this line
+    return Consumer<ThemeProvider>(builder: (context, themeProvider, child) {
+      return MaterialApp(
+        themeMode: themeProvider.themeMode,
+        theme: MyThemes.lightTheme,
+        darkTheme: MyThemes.darkTheme,
+        debugShowCheckedModeBanner: false,
+        home: FutureBuilder<SharedPreferences>(
+          future: SharedPreferences.getInstance(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              SharedPreferences sharedPreferences = snapshot.data!;
+              var loggedInState =
+                  sharedPreferences.getBool("LoggedIn") ?? false;
 
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English, no country code
-            Locale('fa', ''), // Spanish, no country code
-          ],
-          themeMode: ThemeProvider.themeMode,
-          theme: MyThemes.lightTheme,
-          darkTheme: MyThemes.darkTheme,
-          debugShowCheckedModeBanner: false,
-          home: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Body(),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class Body extends StatefulWidget {
-  const Body({super.key});
-
-  @override
-  State<Body> createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [ThemeSwitcher()],
-        title: Text('Karami Exchange'),
-        centerTitle: true,
-      ),
-      body: MainWrapper(),
-    );
+              if (loggedInState) {
+                return const MainWrapper();
+              } else {
+                return const SignUpScreen();
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      );
+    });
   }
 }
